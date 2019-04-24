@@ -1,0 +1,170 @@
+  <app-navbar></app-navbar>
+  <main role="main">
+      <section class="jumbotron text-center">
+          <div class="container" style="width: 70%;margin-top: 1%">
+              <h2 style="text-align: center;">Welcome to BookSavvie</h2>
+              <h6 style="text-align: center;">{{headerText}}</h6>
+              <form (ngSubmit)="onSubmit()" #searchForm="ngForm" style="margin-top: 7%;">
+                  <div class="form-group">
+                      <!-- <label for="name">Username</label> -->
+                      <input type="text" class="form-control" id="searchQuery" minlength="3" maxlength="20" [(ngModel)]="model.searchQuery" name="SearchQuery" placeholder="Search book or author" autofocus required>
+                      <button type="submit" class="btn btn-success" style="margin-top: 4%;display: none" [disabled]="!searchForm.form.valid">Search</button>
+                  </div>
+                  <div [hidden]="!noResultForSearchDiv" class="w3-animate-opacity" style="text-align:center;">No results found!</div>
+                  <!-- <div class="w3-spin w3-animate-opacity" [hidden]="!loadingDiv"></div> -->
+                  <img src="./../../assets/Magnify-1.6s-109px.gif" [hidden]="!loadingDiv" />
+              </form>
+          </div>
+      </section>
+      <!-- <div class="album py-5 bg-light" style="margin:5px;">
+          <div class="container">
+              <div class="row" [hidden]="stepOneCompleted" style="margin-bottom: 60px">
+                  <div class="col-md-4 w3-animate-opacity" *ngFor="let book of searchedBooksList; let i = index">
+                      <div class="card mb-4 shadow-sm" style="width: 18rem;">
+                          <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail">
+                              <title>Placeholder</title>
+                              <rect fill="#55595c" width="100%" height="100%" />
+                              <text fill="#eceeef" dy=".3em" x="50%" y="50%">Book Thumbnail</text>
+                          </svg>
+                          <div class="card-body">
+                              <h4 class="card-title">{{book.bookName}}</h4>
+                              <p class="card-text">{{book.authorFirstName}} {{book.authorLastName}}</p>
+                              <div class="d-flex justify-content-between align-items-center">
+                                  <div class="btn-group">
+                                      <button 
+                                        type="button" 
+                                        (click)="markAsRead(book.bookId)" 
+                                        [ngClass]="selectedReadBookIds.includes(book.bookId) ? 'btn btn-success btn-sm' : 'btn btn-info btn-sm'" 
+                                        [disabled]="selectedReadBookIds.includes(book.bookId) ? true : false">
+                                          Mark as Read
+                                      </button>
+                                      
+                                  </div>
+                                  <div class="btn-group" style="margin:2px;">
+                                      <ngb-rating 
+                                        max="5" 
+                                        [(rate)]="currentRate" 
+                                        [(ngModel)]="currentRate" 
+                                        [hidden]="ratingFlag.includes(book.bookId) ? false : true" 
+                                        [readonly]="" 
+                                        (click)="ratingClicked(book.bookId)">
+                                      </ngb-rating>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+
+                  </div>
+                  
+              </div>
+              <div class="row" [hidden]="!stepOneCompleted" style="margin-bottom: 60px;">
+                <div class="col-md-1 w3-animate-opacity" *ngFor="let genreItem of searchedGenreList">
+                    <button 
+                      type="button" 
+                      (click)="onGenreClick(genreItem.genreId)" 
+                      [disabled]="selectedGenreList.includes(genreItem.genreId) ? true : false"
+                      [ngClass]="!selectedGenreList.includes(genreItem.genreId) ? 'btn btn-genreBubbles btn-warning' : 'btn btn-genreBubbles btn-success'">
+                        {{genreItem.genreName}}
+                    </button>
+                </div>
+              </div>
+              
+          </div>
+      </div> -->
+      <div class="album py-5 bg-light" [hidden]="stepOneCompleted">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-3 w3-animate-opacity" *ngFor="let book of searchedBooksList; let i = index">
+              <div class="card mb-4 shadow-sm">
+                <!-- <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail">
+                  <title>Placeholder</title>
+                  <rect width="100%" height="100%" fill="#55595c"/>
+                  <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>
+                </svg> -->
+                <img [src]="book.bookImgUrl" width="100%" height="400" class="bd-placeholder-img card-img-top" />
+                <div class="card-body">
+                  <button class="btn btn-xs btn-outline-success" style="border-radius: 30px;margin-bottom: 10px;" [disabled]="true" [hidden]="!book.isBestSeller"># best seller</button>
+                  <h6 class="card-title">{{book.bookName}} <!-- <button class="btn btn-xs btn-outline-success" style="border-radius: 30px;margin-bottom: 10px;" [disabled]="true" [hidden]="!book.isBestSeller"># best seller</button> --></h6>
+                  <p class="card-text">By {{book.author.firstName}} {{book.author.lastName}}</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                      <button type="button" [ngClass]="selectedReadBookIds.includes(book.bookId) ? 'btn btn-xs btn-outline-success' : 'btn btn-xs btn-outline-secondary'" (click)="markAsRead(book.bookId)" [disabled]="selectedReadBookIds.includes(book.bookId) ? true : false">Mark as read</button>
+                      <button type="button" class="btn btn-xs btn-outline-secondary" (click)="viewDetailsClicked(book)" data-target="#bookdetails" data-toggle="modal">View details</button>
+                    </div>
+                    <!-- <small class="text-muted">9 mins</small> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container" [hidden]="!stepOneCompleted" style="margin-bottom: 60px;">
+        <div class="col-md-1 w3-animate-opacity" *ngFor="let genreItem of searchedGenreList">
+            <button 
+              type="button" 
+              (click)="onGenreClick(genreItem.genreId)" 
+              [disabled]="selectedGenreList.includes(genreItem.genreId) ? true : false"
+              [ngClass]="!selectedGenreList.includes(genreItem.genreId) ? 'btn btn-genreBubbles btn-warning' : 'btn btn-genreBubbles btn-success'">
+                {{genreItem.genreName}}
+            </button>
+        </div>
+      </div>
+      <!-- <app-bookdetails class="modal fade" tabindex="-1" data-keyboard="false" id="bookdetails"></app-bookdetails> -->
+      <!-- book details modal div starts here -->
+      <div class="modal fade" tabindex="-1" id="bookdetails" data-keyboard="false">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">
+                &times;
+              </button>
+              
+            </div>
+            <div class="modal-body">
+              <div class="row featurette">
+                <div class="col-md-7 order-md-2">
+                  <h2 class="featurette-heading">{{selectedBookDetails.bookName}}</h2>
+                  <h5><span class="text-muted">By {{selectedBookDetails.author.firstName}} {{selectedBookDetails.author.lastName}}</span></h5>
+                  Rating: <ngb-rating 
+                    max="5" 
+                    [(rate)]="bookRating" 
+                    [readonly]="true">
+                  </ngb-rating>
+                  <p class="font-weight-normal">
+                    {{selectedBookDetails.bookSummary}}
+                  </p>
+                </div>
+                <div class="col-md-5 order-md-1">
+                  <img class="featurette-image img-fluid mx-auto" [src]="selectedBookDetails.bookImgUrl" data-src="holder.js/500x500/auto" alt="book thumbnail">
+                </div>
+              </div>
+              <hr class="featurette-divider">
+              <div class="row">
+                  <div class="text-right col-8">
+                      <h5><span class="text-muted">{{selectedBookDetails.author.firstName}} {{selectedBookDetails.author.lastName}}</span></h5>
+                      <p class="small font-italic">
+                        {{selectedBookDetails.author.summary}}
+                      </p>
+                  </div>
+                  <div class="col-4 align-center">
+                      <img class="rounded-circle" src="../../assets/avatar.png" alt="Generic placeholder image" width="100" height="100">
+                  </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- book details modal div ends here -->
+  </main>
+  <footer class="footer text-muted fixed-bottom">
+      <div class="container" style="margin:10px;">
+          <div class="text-right">
+              <button class="btn btn-link" (click)="onNextStepClick()" style="margin-right: 10px;" [hidden]="stepOneCompleted">Skip</button>
+              <button (click)="stepOneCompleted == false ? onNextStepClick() : onLastStepClick()" class="btn btn-sm btn-success" [disabled]="selectedReadBookIds.length === 0 && !stepOneCompleted && selectedGenreList.length === 0 ? true : false">{{nextStepFinishButtonText}}</button>
+            </div>
+      </div>
+  </footer>

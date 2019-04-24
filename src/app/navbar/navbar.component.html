@@ -1,0 +1,67 @@
+<!-- <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" routerLink="/new-user">BookSavvie</a>
+        </div>
+        <ul class="nav navbar-nav pull-left">
+            <li><a routerLink="/home">Home</a></li>
+            <li><a routerLink="/admin">Admin</a></li>
+            <li><a routerLink="/reading-list">Reading List</a></li>
+            <li><a href="#">Page 3</a></li>
+        </ul>
+        <span class="navbar-text pull-right">
+                 <img src="./../../favicon.ico" class="avatar img-circle" height="60%" width="60%" />
+        </span>
+    </div>
+</nav> -->
+<nav class="navbar navbar-expand-md bg-green navbar-dark">
+    <!-- navbar-dark bg-dark -->
+    <a class="navbar-brand" routerLink="/home">BookSavvie</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample03" aria-controls="navbarsExample03" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="collapse navbar-collapse" id="navbarsExample03">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/home">Dashboard</a>
+            </li>
+            <!-- <li class="nav-item">
+                <a class="nav-link" routerLink="/admin">Admin</a>
+            </li> -->
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/reading-list">Reading List</a>
+            </li>
+        </ul>
+        <ul class="my-2 my-md-0 mr-md-3 navbar-nav mr-auto">
+            <!-- <li class="nav-item">
+                <a class="nav-link" style="margin-left:3px" (click)="logout()">Logout</a>
+                
+            </li> -->
+            <!-- <li class="nav-item">
+                <form class="form-inline" (ngSubmit)="onSubmit()" #searchForm="ngForm">
+                    <input class="form-control" type="text" placeholder="Search books" id="searchQuery" minlength="3" maxlength="20" [(ngModel)]="model.searchQuery" name="SearchQuery">
+                </form>
+            </li> -->
+            <!-- <li class="nav-item">
+                <label class="nav-link">Hello, {{loggedInUsername}}</label>
+            </li> -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">@{{loggedInUsername}}</a>
+                <div class="dropdown-menu" aria-labelledby="dropdown01">
+                    <!-- <a class="dropdown-item" href="#" data-target="#editProfile" data-toggle="modal">View profile</a>
+                    <a class="dropdown-item" href="#" data-target="#changePassword" data-toggle="modal">Change password</a> -->
+                    <a class="dropdown-item" (click)="logout()">Logout</a>
+                </div>
+            </li>
+            <li>
+                <a class="nav-link" routerLink="/search">Search Books</a>
+            </li>
+        </ul>
+        <!-- <form class="form-inline mt-2 mt-md-0" (ngSubmit)="onBookSearchSubmit()" #searchForm="ngForm">
+            <input class="form-control mr-sm-2" type="text" placeholder="Search books" aria-label="Search" minlength="3" maxlength="20" [(ngModel)]="model.searchQuery" name="SearchQuery">
+        </form> -->
+    </div>
+</nav>
+<app-change-password class="modal fade" tabindex="-1" id="changePassword" data-keyboard="false" data-backdrop="static"></app-change-password>
+<app-my-profile class="modal fade" tabindex="-1" id="editProfile" data-keyboard="false" data-backdrop="static"></app-my-profile>

@@ -1,0 +1,163 @@
+<app-navbar></app-navbar>
+<main role="main" class="container" style="margin-top: 1%;">
+
+  <div class="starter-template">
+    <h1>Howdy Admin!</h1>
+    <p class="lead">Click on the data that you want to add.</p>
+    <button type="button" class="btn btn-primary" (click)="launchAddBookForm()">{{book}}</button>
+    <!-- <button type="button" class="btn btn-secondary">Secondary</button> -->
+    <button type="button" class="btn btn-success" (click)="launchAddAuthorForm()">{{author}}</button>
+    <!-- <button type="button" class="btn btn-danger">Danger</button>
+    <button type="button" class="btn btn-warning">Warning</button> -->
+    <button type="button" class="btn btn-info" (click)="launchAddGenreForm()">{{genre}}</button>
+    <!-- <button type="button" class="btn btn-dark">Dark</button> -->
+
+    <div style="text-align: left;" [hidden]="!addBookForm">
+      <form (ngSubmit)="onAddBookFormSubmit()" #bookForm="ngForm" style="margin-top: 7%;">
+        <div class="form-group">
+          <label for="name">Book Name</label>
+          <input type="text" class="form-control" id="bookBame" [(ngModel)]="bookModel.bookName" name="bookName" required>
+        </div>
+    
+        <div class="form-group">
+          <label for="alterEgo">Author ID</label>
+          <input type="number" class="form-control" id="authorId" [(ngModel)]="bookModel.authorId" name="authorId" required>
+        </div>
+
+        <div class="form-group">
+          <label for="name">Book Summary</label>
+          <textarea class="form-control" id="bookSummary" [(ngModel)]="bookModel.bookSummary" name="bookSummary" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="name">Region</label>
+          <!-- <input type="text" class="form-control" id="region" [(ngModel)]="bookModel.region" name="region" required> -->
+          <select id="region" [(ngModel)]="bookModel.region" [ngModelOptions]="{standalone: true}" class="form-control">
+            <option *ngFor="let region of regionList" class="dropdown-item" [(ngValue)]="region">{{region}}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="name">Publishing House</label>
+          <input type="text" class="form-control" id="publishingHouse" [(ngModel)]="bookModel.publishingHouse" name="publishingHouse" required>
+        </div>
+
+        <div class="form-group">
+          <label for="name">Release Date</label>
+          <input type="date" class="form-control" id="releaseDate" [(ngModel)]="bookModel.releaseDate" name="releaseDate" required>
+        </div>
+
+        <div class="form-group">
+          <label for="name">Is it a best seller?</label>
+          <input type="text" class="form-control" id="isBestSeller" [(ngModel)]="bookModel.isBestSeller" name="isBestSeller" required>
+        </div>
+
+        <div class="form-group">
+          <label for="name">Genre Codes (Comma separated)</label>
+          <input type="text" class="form-control" id="genreCodes" [(ngModel)]="bookModel.genreCodes" name="genreCodes" required>
+        </div>
+
+        <div class="form-group">
+          <label for="name">Book Thumbnail URL</label>
+          <input type="text" class="form-control" id="bookImgUrl" [(ngModel)]="bookModel.bookImgUrl" name="bookImgUrl" required>
+        </div>
+
+        <!-- <div class="form-group">
+          <label for="bookThumbnail">Book Thumbnail</label>
+          <input type="file" class="form-control-file" id="bookThumbnail" [(ngModel)]="bookThumbnail" name="bookThumbnail" accept="image/*" required>
+        </div> -->
+    
+        <button type="submit" class="btn btn-primary" style="width: 100%;" [disabled]="!bookForm.form.valid">Add Book</button>
+        <!--[disabled]="!bookForm.form.valid"-->
+        
+        
+      </form>
+    </div>
+
+    <div style="text-align: left;" [hidden]="!addAuthorForm">
+      <form (ngSubmit)="onAddAuthorFormSubmit()" #authorForm="ngForm" style="margin-top: 7%;">
+        <div class="form-group">
+          <label for="name">First Name</label>
+          <input type="text" class="form-control" id="firstName" [(ngModel)]="authorModel.firstName" name="firstName" required>
+        </div>
+    
+        <div class="form-group">
+          <label for="alterEgo">Last Name</label>
+          <input type="text" class="form-control" id="lastName" [(ngModel)]="authorModel.lastName" name="lastName" required>
+        </div>
+
+        <div class="form-group">
+          <label for="name">Author Summary</label>
+          <input type="text" class="form-control" id="authorSummary" [(ngModel)]="authorModel.authorSummary" name="authorSummary" required>
+        </div>
+
+        <div class="form-group">
+          <label for="name">Region</label>
+          <input type="text" class="form-control" id="region" [(ngModel)]="authorModel.region" name="region" required>
+        </div>
+
+        <div class="form-group">
+          <label for="name">Email</label>
+          <input type="email" class="form-control" id="email" [(ngModel)]="authorModel.email" name="email" required>
+        </div>
+    
+        <button type="submit" class="btn btn-success" style="width: 100%;" [disabled]="!authorForm.form.valid">Add Author</button>
+    
+      </form>
+    </div>
+
+    <div style="text-align: left;" [hidden]="!addGenreForm">
+      <form (ngSubmit)="onAddGenreFormSubmit()" #genreForm="ngForm" style="margin-top: 7%;">
+        <div class="form-group">
+          <label for="name">Genre Type</label>
+          <input type="text" class="form-control" id="genreType" [(ngModel)]="genreModel.genreType" name="genreType" required>
+        </div>
+    
+        <div class="form-group">
+          <label for="alterEgo">Genre Name</label>
+          <input type="text" class="form-control" id="genreName" [(ngModel)]="genreModel.genreName" name="genreName" required>
+        </div>
+    
+        <button type="submit" class="btn btn-info" style="width: 100%;" [disabled]="!genreForm.form.valid">Add Genre</button>
+    
+      </form>
+    </div>
+
+    <!-- Authors and Genres -->
+    <div>
+      <table class="table" style="width: 600px">
+        <tr>
+          <td>
+              <table class="table">
+                <tr>
+                  <th>Author ID</th>
+                  <th>Author Name</th>
+                </tr>
+                <tr *ngFor="let author of authorList">
+                  <td>{{author.authorId}}</td>
+                  <td>{{author.firstName}} {{author.lastName}}</td>
+                </tr>
+              </table>
+          </td>
+          <td>
+              <table class="table">
+                <tr>
+                  <th>Genre ID</th>
+                  <th>Genre Type</th>
+                  <th>Genre Name</th>
+                </tr>
+                <tr *ngFor="let genre of genreList">
+                  <td>{{genre.genreId}}</td>
+                  <td>{{genre.genreType}}</td>
+                  <td>{{genre.genreName}}</td>
+                </tr>
+              </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <p style="margin-top: 5px;color: green;">{{statusMessage}}</p>
+
+  </div>
+
+</main>

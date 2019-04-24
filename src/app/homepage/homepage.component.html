@@ -1,0 +1,102 @@
+<app-navbar></app-navbar>
+<div class="nav-scroller bg-white shadow-sm">
+    <nav class="nav nav-underline">
+        <span class="active nav-link" style="color: #356e39">Categories</span>
+        <!-- <a class="nav-link active" href="#">Dashboard</a> -->
+        <button class="nav-link btn btn-link" (click)="loadRecommendations()">My Interests</button>
+        <button class="nav-link btn btn-link" (click)="onGenreClick('Thriller')">Thriller</button>
+        <button class="nav-link btn btn-link" (click)="onGenreClick('Drama')">Drama</button>
+        <button class="nav-link btn btn-link" (click)="onGenreClick('Crime')">Crime</button>
+        <button class="nav-link btn btn-link" (click)="onGenreClick('Horror')">Horror</button>
+        <button class="nav-link btn btn-link" (click)="onGenreClick('Art')">Art</button>
+        <button class="nav-link btn btn-link" (click)="onGenreClick('Biography')">Biography</button>
+        <button class="nav-link btn btn-link" (click)="onGenreClick('Travel')">Travel</button>
+    </nav>
+</div>
+<main role="main">
+        <img src="./../../assets/Magnify-1.6s-109px.gif" [hidden]="!loadingDiv" class="center"/>
+    <div *ngFor="let book of recommendedBookList; let i = index">
+        <section class="jumbotron text-center">
+            <div class="container">
+                <h2 style="text-align: center;">Suggestions based on {{book.category}}</h2>
+            </div>
+        </section>
+        <div>
+            <div class="album py-5 bg-light">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-3 w3-animate-opacity"  *ngFor="let bookItem of book.books">
+                            <div class="card mb-4 shadow-sm">
+                                <!-- <svg class="bd-placeholder-img card-img-top" width="170" height="220" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail">
+                                    <title>Placeholder</title>
+                                    <rect fill="#55595c" width="100%" height="100%" />
+                                    <text fill="#eceeef" dy=".3em" x="50%" y="50%">Book Thumbnail</text>
+                                </svg> -->
+                                <img [src]="bookItem.bookImgUrl" width="100%" height="400" class="bd-placeholder-img card-img-top" />
+                                <div class="card-body">
+                                    <h6 class="card-title">{{bookItem.bookName}}</h6>
+                                    <p class="card-text">By {{bookItem.author.firstName}} {{bookItem.author.lastName}}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="btn-group">
+                                            <button type="button" (click)="viewDetailsClicked(bookItem)" class="btn btn-xs btn-outline-secondary" data-target="#bookdetails" data-toggle="modal">View details</button>
+                                            <button type="button" [disabled]="addedToReadingList.includes(bookItem.bookId) ? true : false" (click)="addBookToReadingList(bookItem.bookId)" [class]="addedToReadingList.includes(bookItem.bookId) ? 'btn btn-xs btn-outline-success' : 'btn btn-xs btn-outline-secondary'">Add to Reading List</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- book details modal div starts here -->
+<div class="modal fade" tabindex="-1" id="bookdetails" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+            &times;
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row featurette">
+            <div class="col-md-7 order-md-2">
+                <h2 class="featurette-heading">{{selectedBookDetails.bookName}}</h2>
+                <h5><span class="text-muted">By {{selectedBookDetails.author.firstName}} {{selectedBookDetails.author.lastName}}</span></h5>
+                Rating: <ngb-rating 
+                            max="5" 
+                            [(rate)]="selectedBookDetails.ratingScore" 
+                            [readonly]="true">
+                        </ngb-rating>
+                <p class="font-weight-normal">
+                    {{selectedBookDetails.bookSummary}}
+                </p>
+            </div>
+            <div class="col-md-5 order-md-1">
+                <img class="featurette-image img-fluid mx-auto" [src]='selectedBookDetails.bookImgUrl' data-src="holder.js/500x500/auto" alt="book thumbnail">
+            </div>
+            </div>
+            <hr class="featurette-divider">
+            <div class="row">
+                <div class="text-right col-8">
+                    <h5><span class="text-muted">{{selectedBookDetails.author.firstName}} {{selectedBookDetails.author.lastName}}</span></h5>
+                    <p class="small font-italic">
+                    {{selectedBookDetails.author.summary}}
+                    </p>
+                </div>
+                <div class="col-4 align-center">
+                    <img class="rounded-circle" style="background-size: cover;" [src]="selectedBookDetails.author.authorImgUrl != null ? selectedBookDetails.author.authorImgUrl : '../../assets/avatar.png'" [alt]="selectedBookDetails.author.authorImgUrl" width="100" height="100">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <!-- <button type="submit" class="btn btn-outline-success">{{selectedBookDetails.looksInterestingFlag}}</button> -->
+            <button type="button" [disabled]="addedToReadingList.includes(selectedBookDetails.bookId) ? true : false" (click)="addBookToReadingList(selectedBookDetails.bookId)" [class]="addedToReadingList.includes(selectedBookDetails.bookId) ? 'btn btn-outline-success' : 'btn btn-outline-secondary'">Add to Reading List</button>
+            <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+        </div>
+        </div>
+    </div>
+</div>
+<!-- book details modal div ends here -->

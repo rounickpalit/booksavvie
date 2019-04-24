@@ -1,0 +1,110 @@
+<app-navbar></app-navbar>
+<div>
+    <main role="main" class="container">
+      <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-green rounded shadow-sm">
+        <div class="lh-100">
+          <h4 class="mb-0 text-white lh-100">Reading List</h4>
+        </div>
+      </div>
+      <img src="./../../assets/Magnify-1.6s-109px.gif" [hidden]="!loadingDiv" class="center"/>
+      <div [hidden]="!noResultForReadingList" class="w3-animate-opacity" style="text-align:center;margin-top: 5%"><h5>It's pretty quiet in here! Take me to <a routerLink='/home'>Dashboard</a></h5></div>
+      <div *ngFor="let readingListItem of readingList">
+        <div class="my-3 p-3 bg-white rounded shadow-sm w3-animate-opacity"  (click)="onBookClick(readingListItem)">
+          <h6 class="border-bottom border-gray pb-2 mb-0"><button class="btn btn-xs btn-curved-border btn-outline-success" disabled="true" >{{readingListItem.isCompleted}}</button></h6>
+          <div class="media text-muted pt-3">
+            <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 32x32"><title>Placeholder</title><rect width="100%" height="100%" fill="#2c9731"/><text x="50%" y="50%" fill="#ffffff" dy=".3em">{{readingListItem.book.bookName.slice(0,1)}}</text></svg>
+            <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+              <strong class="d-block">{{readingListItem.book.bookName}}</strong>
+              {{readingListItem.book.bookSummary.slice(0,300)}}...<a style="color:rgb(42, 101, 189)"></a>
+            </p>
+          </div>
+          <small class="d-block text-right mt-3">
+              <button type="submit" class="btn btn-xs btn-outline-success" data-target="#bookdetails" data-toggle="modal">View details</button>
+              <button type="submit" class="btn btn-xs btn-outline-success" [disabled]="markedCurrentlyReadingBooks.includes(readingListItem.book.bookId) ? true : false" (click)="markBookAsCurrentlyReading(readingListItem.book.bookId)" [hidden]="readingListItem.isCompleted === '# completed reading' || readingListItem.isCompleted === '# currently reading' ? true : false">Mark as Currently Reading</button>
+              <button type="submit" class="btn btn-xs btn-outline-success" [disabled]="markedCompletedBooks.includes(readingListItem.book.bookId) ? true : false" (click)="markAsCompleted(readingListItem.book.bookId)" [hidden]="readingListItem.isCompleted === '# completed reading' ? true : false">Mark as Completed</button>
+              <button type="submit" class="btn btn-xs btn-outline-success" [disabled]="removedBooks.includes(readingListItem.book.bookId) ? true : false" (click)="removeFromReadingList(readingListItem.book.bookId)" [hidden]="readingListItem.isCompleted === '# want to read' ? false : true">Remove from list</button>
+            <div class="text-muted"><span class="glyphicon glyphicon-time"></span> Last updated: {{readingListItem.lastUpdate}}</div>
+          </small>
+        </div>
+  
+        <!-- <div class="my-3 p-3 bg-white rounded shadow-sm">
+            <h6 class="border-bottom border-gray pb-2 mb-0"><button class="btn btn-xs btn-outline-info" disabled="true"># want to read</button></h6>
+          <div class="media text-muted pt-3">
+            <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 32x32"><title>Placeholder</title><rect width="100%" height="100%" fill="#e83e8c"/><text x="50%" y="50%" fill="#ffffff" dy=".3em">L</text></svg>
+            <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+              <strong class="d-block text-gray-dark">Last Summer</strong>
+              Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
+            </p>
+          </div>
+          <small class="d-block text-right mt-3">
+            <div class="text-muted">Added 23 days ago</div>
+          </small>
+        </div>
+  
+        <div class="my-3 p-3 bg-white rounded shadow-sm">
+          <h6 class="border-bottom border-gray pb-2 mb-0"><button class="btn btn-xs btn-outline-info" disabled="true"># completed reading</button></h6>
+          <div class="media text-muted pt-3">
+            <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 32x32"><title>Placeholder</title><rect width="100%" height="100%" fill="#6f42c1"/><text x="50%" y="50%" fill="#ffffff" dy=".3em">H</text></svg>
+            <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+              <strong class="d-block text-gray-dark">Harry Potter and the Prisoner of Azkaban</strong>
+              Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
+            </p>
+          </div>
+          <small class="d-block text-right mt-3">
+            <div class="text-muted">Completed 23 days ago</div>
+          </small>
+        </div> -->
+
+      </div>
+    </main>
+</div>
+<!-- book details modal div starts here -->
+<div class="modal fade" tabindex="-1" id="bookdetails" data-keyboard="false">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row featurette">
+          <div class="col-md-7 order-md-2">
+            <h2 class="featurette-heading">{{selectedBookDetails.book.bookName}}</h2>
+            <h5><span class="text-muted">By {{selectedBookDetails.book.author.firstName}} {{selectedBookDetails.book.author.lastName}}</span></h5>
+            <ngb-rating
+              max="5"
+              [(rate)]="bookRating"
+              [readonly]="true">
+            </ngb-rating>
+            <p class="font-weight-normal">
+              {{selectedBookDetails.book.bookSummary}}
+            </p>
+          </div>
+          <div class="col-md-5 order-md-1">
+            <img class="featurette-image img-fluid mx-auto" [src]='selectedBookDetails.book.bookImgUrl' data-src="holder.js/500x500/auto" alt="book thumbnail">
+          </div>
+        </div>
+        <hr class="featurette-divider">
+        <div class="row">
+            <div class="text-right col-8">
+              <h5><span class="text-muted">{{selectedBookDetails.book.author.firstName}} {{selectedBookDetails.book.author.lastName}}</span></h5>
+              <p class="small font-italic">
+                {{selectedBookDetails.book.author.summary}}
+              </p>
+            </div>
+            <div class="col-4 align-center">
+              <img class="rounded-circle"  [src]="selectedBookDetails.book.author.authorImgUrl != null ? selectedBookDetails.book.author.authorImgUrl : '../../assets/avatar.png'" [alt]="selectedBookDetails.book.author.authorImgUrl" width="100" height="100">
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+          <!-- <button type="submit" class="btn btn-success" (click)="markAsCompleted(selectedBookDetails.book.bookId)" [hidden]="selectedBookDetails.isCompleted === '# completed reading' ? true : false">Mark as Completed</button>
+          <button type="submit" class="btn btn-success" (click)="markAsCompleted(selectedBookDetails.book.bookId)" [hidden]="selectedBookDetails.isCompleted === '# completed reading' ? true : false">Flag as Currently Reading</button>
+          <button type="submit" class="btn btn-outline-success" [disabled]="removedBooks.includes(selectedBookDetails.book.bookId) ? true : false" (click)="removeFromReadingList(selectedBookDetails.book.bookId)" [hidden]="selectedBookDetails.isCompleted === '# want to read' ? false : true">Remove from list</button> -->
+          <button type="button" class="btn btn-outline-success" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- book details modal div ends here -->
